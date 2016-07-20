@@ -16,7 +16,8 @@
 
 // the setup function runs once when you press reset or power the board
 void setup() {
-  // initialize digital pin 13 as an output.
+  Serial.begin(9600);
+
   pinMode(2, OUTPUT);
   pinMode(3, OUTPUT);
   pinMode(4, OUTPUT);
@@ -30,58 +31,22 @@ void setup() {
 
 // the loop function runs over and over again forever
 void loop() {
-   digitalWrite(2, HIGH);   
-  delay(1000);            
-  digitalWrite(2, LOW); 
-  delay(1000);
-  
-  digitalWrite(2, HIGH);   
-  delay(250);            
-  digitalWrite(2, LOW);    
-  
-  
-   digitalWrite(3, HIGH);   
-  delay(250);            
-  digitalWrite(3, LOW);    
-    
-  
-   digitalWrite(4, HIGH);   
-  delay(250);            
-  digitalWrite(4, LOW);    
-   
-  
-   digitalWrite(5, HIGH);   
-  delay(250);            
-  digitalWrite(5, LOW);    
-    
-  
-   digitalWrite(6, HIGH);   
-  delay(250);            
-  digitalWrite(6, LOW);    
-    
-  
-  digitalWrite(7, HIGH);   
-  delay(250);            
-  digitalWrite(7, LOW);    
-    
-   
-  digitalWrite(8, HIGH);   
-  delay(250);            
-  digitalWrite(8, LOW);    
-    
-  
-  digitalWrite(9, HIGH);   
-  delay(250);            
-  digitalWrite(9, LOW);    
-   
-  
-  digitalWrite(10, HIGH);   
-  delay(250);            
-  digitalWrite(10, LOW);    
-  delay(250);
 
-  digitalWrite(10, HIGH);   
-  delay(1000);            
-  digitalWrite(10, LOW);    
+  digitalWrite(2, HIGH);
+  delay(1000);
+  digitalWrite(2, LOW);
+  delay(1000);
+
+  for (int i=2; i<11; i++) {
+    Serial.print(i);
+    digitalWrite(i, HIGH);
+    delay(250);
+    digitalWrite(i, LOW);
+  }
+  Serial.print("\n");
+
+  digitalWrite(10, HIGH);
+  delay(1000);
+  digitalWrite(10, LOW);
   delay(1000);
 }
