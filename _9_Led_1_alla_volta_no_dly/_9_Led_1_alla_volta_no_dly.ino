@@ -13,6 +13,7 @@
   by Scott Fitzgerald
  */
 
+int j = 0;
 
 // the setup function runs once when you press reset or power the board
 void setup() {
@@ -38,15 +39,17 @@ void loop() {
   delay(1000);
 
   for (int i=2; i<11; i++) {
-    Serial.print(i);
     digitalWrite(i, HIGH);
     delay(250);
     digitalWrite(i, LOW);
   }
-  Serial.print("\n");
 
   digitalWrite(10, HIGH);
   delay(1000);
   digitalWrite(10, LOW);
   delay(1000);
+
+  Serial.print(j);
+  Serial.print("\n");
+  j++;
 }
