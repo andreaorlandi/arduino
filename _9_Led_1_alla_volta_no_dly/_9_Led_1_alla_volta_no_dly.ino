@@ -47,7 +47,7 @@ void loop() {
   digitalWrite(10, HIGH);
   delay(1000);
   digitalWrite(10, LOW);
-  delay(1000);
+  delay(2000);
 
   Serial.print(j);
   Serial.print("\n");
