@@ -13,7 +13,21 @@
   by Scott Fitzgerald
  */
 
-int j = 0;
+#include <stdarg.h>
+
+void debug_print(char *fmt, ... ){
+        char buf[128]; // resulting string limited to 128 chars
+        va_list args;
+        va_start (args, fmt );
+        vsnprintf(buf, 128, fmt, args);
+        va_end (args);
+        Serial.print(buf);
+}
+
+
+long t0 = 0;
+int acceso = 0;
+int indice = -1;
 
 // the setup function runs once when you press reset or power the board
 void setup() {
@@ -28,28 +42,67 @@ void setup() {
   pinMode(8, OUTPUT);
   pinMode(9, OUTPUT);
   pinMode(10, OUTPUT);
+
+  t0 = millis();
 }
+
+
+void esegui_elaborazione() {
+
+    Serial.print(dt);
+    Serial.print("\n");
+
+    // spengo il led corrente
+    if (indice >= 0) {
+        digitalWrite(indice, LOW);
+    }
+
+    // incremento indice
+    indice++;
+    if ( indice > 10 ) {
+      indice = 2;
+    }
+
+    // accendo nuovo led
+    digitalWrite(indice, HIGH);
+
+}
+
+
+void elabora_luci() {
+
+    // Verifico se e' il momento di intervenire
+    long t = millis();
+    long dt = t - t0;
+    if ( dt >= 250 ) {
+
+      esegui_elaborazione();
+    
+      t0 = t;
+    }
+}
+
+
+int contatore_principale = 0;
 
 // the loop function runs over and over again forever
 void loop() {
 
-  digitalWrite(2, HIGH);
-  delay(1000);
-  digitalWrite(2, LOW);
-  delay(1000);
-
+  /*
   for (int i=2; i<11; i++) {
     digitalWrite(i, HIGH);
-    delay(250);
+    //delay(250);
     digitalWrite(i, LOW);
   }
+  */
 
-  digitalWrite(10, HIGH);
-  delay(1000);
-  digitalWrite(10, LOW);
-  delay(2000);
+    //Serial.print(contatore_principale);
+    debug_print("Contatore principale %3d \n", contatore_principale);
+    Serial.print(contatore_principale);
+    Serial.print("\n");
+    contatore_principale++;
 
-  Serial.print(j);
-  Serial.print("\n");
-  j++;
+  //delay(200);
+
+  elabora_luci();
 }
