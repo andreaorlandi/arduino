@@ -28,20 +28,37 @@ void debug_print(char *fmt, ... ){
 long t0 = 0;
 
 int indice = -1;
-int medio = 22;
+int direzione = 1; // 1 = avanti, 0 = indietro
+int min_index = 5;
+int max_index = 10;
+int deltat = 1000;
+
+/*
+ * Compito:
+ * - introdurre le variabili deltat_min = 10, deltat_max = 1000
+ * - alla fine di ogni giro, dimezzare deltat per velocizzare la scansione delle luni
+ * - se pero' si scende troppo, tornare indietro
+ * 
+ * - hint: introdurre una variabile per ricordare la direzione del deltat
+ */
+
 // the setup function runs once when you press reset or power the board
 void setup() {
   Serial.begin(9600);
 
-  pinMode(2, OUTPUT);
-  pinMode(3, OUTPUT);
-  pinMode(4, OUTPUT);
-  pinMode(5, OUTPUT);
-  pinMode(6, OUTPUT);
-  pinMode(7, OUTPUT);
-  pinMode(8, OUTPUT);
-  pinMode(9, OUTPUT);
-  pinMode(10, OUTPUT);
+  // sostituire con un loop
+  for (int i=min_index; i<=max_index; i++) {
+    pinMode(i, OUTPUT);
+  }
+
+  // SAREBBE COME FARE:
+  /*
+  int i = min_index;
+  while ( i <= max_index ) {
+    pinMode(i, OUTPUT);
+    i++;
+  }
+  */
 
   t0 = millis();
 }
@@ -49,63 +66,48 @@ void setup() {
 
 void esegui_elaborazione() {
 
-    
-    Serial.print("\n");
-
+    // inizializzazione ?
+    if (indice < 0) {
+      indice = min_index -1;
+      direzione = 1;
+    }
+    else {
     // spengo il led corrente
-    if (indice >= 0) {
         digitalWrite(indice, LOW);
     }
 
-    // incremento indice
-    indice++;
-    if ( indice > 10 ) {
-      indice == medio;
+    if (direzione == 1) {
+      // sposto indice avanti
+      if (indice < max_index) {
+        indice++;
+      }
+      else {
+        indice--;
+        direzione = 0;
+      }
+    }
+    else {
+      // sposto indice indietro
+      if (indice > min_index) {
+        indice--;
+      }
+      else {
+        indice++;
+        direzione = 1;
+        deltat /= 2;
+      }
     }
     
     // accendo nuovo led
     digitalWrite(indice, HIGH);
-
-    if (medio <= 10) {
-
-      digitalWrite(medio, LOW);
-    }
-
-    // incremento indice
-    medio--;
-    if ( medio < 2 ) {
-      medio == indice;
-    }
-    
-    // accendo nuovo led
-    digitalWrite(medio, HIGH);
-     
 }
-
-    /*if (medio <= 10) {
-        digitalWrite(medio, LOW);
-    }
-
-    // incremento indice
-    medio--;
-    if ( medio < 2 ) {
-      medio = 10;
-    }
-    
-    // accendo nuovo led
-    digitalWrite(medio, HIGH);*/
-
-   
-
-
-
 
 void elabora_luci() {
 
     // Verifico se e' il momento di intervenire
     long t = millis();
     long dt = t - t0;
-    if ( dt >= 250 ) {
+    if ( dt >= deltat ) {
 
       esegui_elaborazione();
     
@@ -120,7 +122,7 @@ int contatore_principale = 0;
 void loop() {
 
 
-  esegui_elaborazione();
+  elabora_luci();
   /*
   for (int i=2; i<11; i++) {
     digitalWrite(i, HIGH);
@@ -130,13 +132,13 @@ void loop() {
   */
 
     //Serial.print(contatore_principale);
-    debug_print("Contatore principale %3d \n", contatore_principale);
-    Serial.print(contatore_principale);
-    Serial.print("\n");
+    //debug_print("Contatore principale %3d \n", contatore_principale);
+    //Serial.print(contatore_principale);
+    //Serial.print("\n");
     contatore_principale++;
 
   //delay(200);
 
-  elabora_luci();
+  //elabora_luci();
   
 }
