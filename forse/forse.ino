@@ -28,7 +28,7 @@ void debug_print(char *fmt, ... ){
 long t0 = 0;
 
 int indice = -1;
-
+int medio = 22;
 // the setup function runs once when you press reset or power the board
 void setup() {
   Serial.begin(9600);
@@ -60,13 +60,44 @@ void esegui_elaborazione() {
     // incremento indice
     indice++;
     if ( indice > 10 ) {
-      indice = 2;
+      indice == medio;
     }
-
+    
     // accendo nuovo led
     digitalWrite(indice, HIGH);
 
+    if (medio <= 10) {
+
+      digitalWrite(medio, LOW);
+    }
+
+    // incremento indice
+    medio--;
+    if ( medio < 2 ) {
+      medio == indice;
+    }
+    
+    // accendo nuovo led
+    digitalWrite(medio, HIGH);
+     
 }
+
+    /*if (medio <= 10) {
+        digitalWrite(medio, LOW);
+    }
+
+    // incremento indice
+    medio--;
+    if ( medio < 2 ) {
+      medio = 10;
+    }
+    
+    // accendo nuovo led
+    digitalWrite(medio, HIGH);*/
+
+   
+
+
 
 
 void elabora_luci() {
@@ -88,6 +119,8 @@ int contatore_principale = 0;
 // the loop function runs over and over again forever
 void loop() {
 
+
+  esegui_elaborazione();
   /*
   for (int i=2; i<11; i++) {
     digitalWrite(i, HIGH);
@@ -105,4 +138,5 @@ void loop() {
   //delay(200);
 
   elabora_luci();
+  
 }

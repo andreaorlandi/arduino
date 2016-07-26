@@ -27,8 +27,8 @@ void debug_print(char *fmt, ... ){
 
 long t0 = 0;
 
-int indice = -1;
-
+int indice = 1;
+int medio = -1;
 // the setup function runs once when you press reset or power the board
 void setup() {
   Serial.begin(9600);
@@ -62,9 +62,24 @@ void esegui_elaborazione() {
     if ( indice > 10 ) {
       indice = 2;
     }
-
+    
     // accendo nuovo led
     digitalWrite(indice, HIGH);
+
+    if (medio <= 10) {
+        digitalWrite(medio, LOW);
+    }
+
+    // incremento indice
+    medio--;
+    if ( medio < 2 ) {
+      medio = 10;
+    }
+    
+    // accendo nuovo led
+    digitalWrite(medio, HIGH);
+
+   
 
 }
 
