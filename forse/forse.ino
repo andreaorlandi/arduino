@@ -32,8 +32,8 @@ int direzione = 1; // 1 = avanti, 0 = indietro
 int min_index = 2;
 int max_index = 10;
 int deltat = 0;
-int deltat_min = 40;
-int deltat_max = 100;
+int deltat_min = 30;
+int deltat_max = 120;
 float deltat_factor = 0.75;
 int deltat_direction = 1;  // 1 = piu' veloce, 0 = piu' lento
 
@@ -125,14 +125,24 @@ void aggiorna_deltat() {
 
 void esegui_elaborazione() {
 
-    // spengo il led corrente
-    digitalWrite(index, LOW);
-
     // aggiorno index
     aggiorna_index();
 
-    // accendo nuovo led
-    digitalWrite(index, HIGH);
+    // scansione dei led per assegnare la luminosita' opportuna
+    for (int i=min_index; i<=max_index; i++ ) {
+      int intensity = LOW;
+      int displacement = (i - index);
+      if (displacement == 0) {
+        intensity = HIGH;
+      }
+      if (deltat < 65 && displacement == 1) {
+        intensity = HIGH;
+      }
+      if (deltat < 40 && abs(displacement) == 1) {
+        intensity = HIGH;
+      }
+      digitalWrite(i, intensity);
+    }
 
     aggiorna_deltat();
 
