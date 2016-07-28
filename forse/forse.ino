@@ -27,18 +27,22 @@ void debug_print(char *fmt, ... ){
 
 long t0 = 0;
 
-int indice = -1;
+int index = 0;
 int direzione = 1; // 1 = avanti, 0 = indietro
-int min_index = 5;
+int min_index = 2;
 int max_index = 10;
-int deltat = 1000;
+int deltat = 0;
+int deltat_min = 40;
+int deltat_max = 100;
+float deltat_factor = 0.75;
+int deltat_direction = 1;  // 1 = piu' veloce, 0 = piu' lento
 
 /*
  * Compito:
  * - introdurre le variabili deltat_min = 10, deltat_max = 1000
  * - alla fine di ogni giro, dimezzare deltat per velocizzare la scansione delle luni
  * - se pero' si scende troppo, tornare indietro
- * 
+ *
  * - hint: introdurre una variabile per ricordare la direzione del deltat
  */
 
@@ -61,45 +65,77 @@ void setup() {
   */
 
   t0 = millis();
+
+  index = min_index;
+  direzione = 1;
+  deltat = deltat_max;
+
 }
 
 
-void esegui_elaborazione() {
-
-    // inizializzazione ?
-    if (indice < 0) {
-      indice = min_index -1;
-      direzione = 1;
-    }
-    else {
-    // spengo il led corrente
-        digitalWrite(indice, LOW);
-    }
+void aggiorna_index() {
 
     if (direzione == 1) {
-      // sposto indice avanti
-      if (indice < max_index) {
-        indice++;
+      // sposto index avanti
+      if (index < max_index) {
+        index++;
       }
       else {
-        indice--;
+        index--;
         direzione = 0;
       }
     }
     else {
-      // sposto indice indietro
-      if (indice > min_index) {
-        indice--;
+      // sposto index indietro
+      if (index > min_index) {
+        index--;
       }
       else {
-        indice++;
+        index++;
         direzione = 1;
-        deltat /= 2;
       }
     }
-    
+
+    return;
+}
+
+void aggiorna_deltat() {
+
+    // Se siamo ritornati all'indizio della fila di led, aggiorniamo deltat
+    if (index == min_index) {
+
+      if (deltat_direction == 1) {
+          deltat = deltat * deltat_factor;
+      }
+      else {
+          deltat = deltat / deltat_factor;
+      }
+
+      if (deltat < deltat_min) {
+        deltat = deltat_min;
+        deltat_direction = 0;
+      }
+      else if (deltat > deltat_max) {
+        deltat = deltat_max;
+        deltat_direction = 1;
+      }
+    }
+      
+}
+
+void esegui_elaborazione() {
+
+    // spengo il led corrente
+    digitalWrite(index, LOW);
+
+    // aggiorno index
+    aggiorna_index();
+
     // accendo nuovo led
-    digitalWrite(indice, HIGH);
+    digitalWrite(index, HIGH);
+
+    aggiorna_deltat();
+
 }
 
 void elabora_luci() {
@@ -110,7 +146,7 @@ void elabora_luci() {
     if ( dt >= deltat ) {
 
       esegui_elaborazione();
-    
+
       t0 = t;
     }
 }
@@ -140,5 +176,5 @@ void loop() {
   //delay(200);
 
   //elabora_luci();
-  
+
 }
