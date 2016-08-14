@@ -54,7 +54,7 @@ class Led {
         }
       }
 
-      void tick(int t) {
+      void tick(long t) {
         // verifichiamo se e' passato abbastanza tempo 
         // da dover aggiornare lo stato del led
         if (t - _t > _dt) {
